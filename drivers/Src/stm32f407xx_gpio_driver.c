@@ -30,37 +30,54 @@ void GPIO_Init(GPIO_Handle_t *pGPIOHandle) //Initialize GPIO Port and Pin
 	if(pGPIOHandle->GPIO_PinConfig.PinMode < 3) //Non interrupt mode
 	{
 		Temp = pGPIOHandle->GPIO_PinConfig.PinMode << (2* pGPIOHandle->GPIO_PinConfig.PinNumber);
-		pGPIOHandle->pGPIOBaseAddr->MODER = Temp;
+		pGPIOHandle->pGPIOBaseAddr->MODER &= ~(0x11 << 2* pGPIOHandle->GPIO_PinConfig.PinNumber);
+		pGPIOHandle->pGPIOBaseAddr->MODER |= Temp;
 	}
 
 	//Configure SPEED
 	Temp = 0;
 	Temp = pGPIOHandle->GPIO_PinConfig.PinSpeed << (2* pGPIOHandle->GPIO_PinConfig.PinNumber);
-	pGPIOHandle->pGPIOBaseAddr->OSPEEDR = Temp;
+	pGPIOHandle->pGPIOBaseAddr->OSPEEDR &= ~ (0x11 << 2* pGPIOHandle->GPIO_PinConfig.PinNumber);
+	pGPIOHandle->pGPIOBaseAddr->OSPEEDR |= Temp;
 
 	//Configure PUPD
 	Temp = 0;
 	Temp = pGPIOHandle->GPIO_PinConfig.PinPuPdControl << (2* pGPIOHandle->GPIO_PinConfig.PinNumber);
-	pGPIOHandle->pGPIOBaseAddr->PUPDR = Temp;
+	pGPIOHandle->pGPIOBaseAddr->PUPDR &= ~(0x11 << 2* pGPIOHandle->GPIO_PinConfig.PinNumber);
+	pGPIOHandle->pGPIOBaseAddr->PUPDR |= Temp;
 
 	//Configure POutput Type
 	Temp = 0;
 	Temp = pGPIOHandle->GPIO_PinConfig.PinOPType << (1* pGPIOHandle->GPIO_PinConfig.PinNumber);
-	pGPIOHandle->pGPIOBaseAddr->OTYPER = Temp;
+	pGPIOHandle->pGPIOBaseAddr->OTYPER &= ~(0x1 << 1* pGPIOHandle->GPIO_PinConfig.PinNumber);
+	pGPIOHandle->pGPIOBaseAddr->OTYPER |= Temp;
 
-	//Configure AF Type
+	//Configure Pin Alt. Function
 	if(pGPIOHandle->GPIO_PinConfig.PinAltFunMode == GPIO_MODE_AF)
 	{
-		// TODO Temp = 0;
-		// Temp = pGPIOHandle->GPIO_PinConfig.PinOPType << (1* pGPIOHandle->GPIO_PinConfig.PinNumber);
-		// pGPIOHandle->pGPIOBaseAddr->OTYPER = Temp;
+		if(pGPIOHandle->GPIO_PinConfig.PinNumber > 7) //High register
+		{
+			 Temp = pGPIOHandle->GPIO_PinConfig.PinAltFunMode<< (4*(pGPIOHandle->GPIO_PinConfig.PinNumber-8));
+			 pGPIOHandle->pGPIOBaseAddr->AFR[1] &= ~(0x1111 << (4*(pGPIOHandle->GPIO_PinConfig.PinNumber-8)));
+			 pGPIOHandle->pGPIOBaseAddr->AFR[1] |= Temp;
+		}
+		else //Low Register
+		{
+			Temp = pGPIOHandle->GPIO_PinConfig.PinAltFunMode<< (4*pGPIOHandle->GPIO_PinConfig.PinNumber);
+			 pGPIOHandle->pGPIOBaseAddr->AFR[0] &= ~(0x1111 << (4*pGPIOHandle->GPIO_PinConfig.PinNumber));
+			pGPIOHandle->pGPIOBaseAddr->AFR[0] |= Temp;
+		}
 	}
 
 }
 
 void GPIO_DeInit(GPIO_RegDef_t *pGPIO) //De-Initialize GPIO Port and Pin
 {
-
+	if(pGPIO == (GPIO_RegDef_t*) GPIOA_BASE_ADDRESS)	GPIOA_REG_RESET();
+	if(pGPIO == (GPIO_RegDef_t*) GPIOB_BASE_ADDRESS)	GPIOB_REG_RESET();
+	if(pGPIO == (GPIO_RegDef_t*) GPIOC_BASE_ADDRESS)	GPIOC_REG_RESET();
+	if(pGPIO == (GPIO_RegDef_t*) GPIOD_BASE_ADDRESS)	GPIOD_REG_RESET();
+	if(pGPIO == (GPIO_RegDef_t*) GPIOE_BASE_ADDRESS)	GPIOE_REG_RESET();
 }
 
 void GPIO_PeriClockControl(GPIO_RegDef_t *pGPIOx, uint8_t Enable) //Enable / Disable GPIO clock

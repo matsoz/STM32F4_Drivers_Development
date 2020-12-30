@@ -237,9 +237,9 @@ Discarded input sections
  .data.pGPIOE   0x0000000000000000        0x4 drivers/Src/stm32f407xx_gpio_driver.o
  .data.pRCC     0x0000000000000000        0x4 drivers/Src/stm32f407xx_gpio_driver.o
  .text.GPIO_Init
-                0x0000000000000000       0x92 drivers/Src/stm32f407xx_gpio_driver.o
+                0x0000000000000000      0x1c2 drivers/Src/stm32f407xx_gpio_driver.o
  .text.GPIO_DeInit
-                0x0000000000000000       0x14 drivers/Src/stm32f407xx_gpio_driver.o
+                0x0000000000000000       0xe0 drivers/Src/stm32f407xx_gpio_driver.o
  .text.GPIO_PeriClockControl
                 0x0000000000000000      0x114 drivers/Src/stm32f407xx_gpio_driver.o
  .text.GPIO_ReadInputPin
@@ -269,10 +269,10 @@ Discarded input sections
  .debug_macro   0x0000000000000000       0xef drivers/Src/stm32f407xx_gpio_driver.o
  .debug_macro   0x0000000000000000       0x6a drivers/Src/stm32f407xx_gpio_driver.o
  .debug_macro   0x0000000000000000      0x1df drivers/Src/stm32f407xx_gpio_driver.o
- .debug_macro   0x0000000000000000      0x20d drivers/Src/stm32f407xx_gpio_driver.o
+ .debug_macro   0x0000000000000000      0x230 drivers/Src/stm32f407xx_gpio_driver.o
  .debug_macro   0x0000000000000000       0xd6 drivers/Src/stm32f407xx_gpio_driver.o
- .debug_line    0x0000000000000000      0x500 drivers/Src/stm32f407xx_gpio_driver.o
- .debug_str     0x0000000000000000     0x4f22 drivers/Src/stm32f407xx_gpio_driver.o
+ .debug_line    0x0000000000000000      0x539 drivers/Src/stm32f407xx_gpio_driver.o
+ .debug_str     0x0000000000000000     0x516b drivers/Src/stm32f407xx_gpio_driver.o
  .comment       0x0000000000000000       0x7c drivers/Src/stm32f407xx_gpio_driver.o
  .debug_frame   0x0000000000000000      0x1a0 drivers/Src/stm32f407xx_gpio_driver.o
  .ARM.attributes
@@ -630,7 +630,7 @@ OUTPUT(STM32F4_Drivers_Development.elf elf32-littlearm)
  .debug_ranges  0x0000000000000000       0x10 Src/main.o
  .debug_ranges  0x0000000000000010       0x20 Startup/startup_stm32f407zgtx.o
 
-.debug_macro    0x0000000000000000     0x1112
+.debug_macro    0x0000000000000000     0x1135
  .debug_macro   0x0000000000000000       0x6c Src/main.o
  .debug_macro   0x000000000000006c      0xa60 Src/main.o
  .debug_macro   0x0000000000000acc       0x22 Src/main.o
@@ -639,16 +639,16 @@ OUTPUT(STM32F4_Drivers_Development.elf elf32-littlearm)
  .debug_macro   0x0000000000000bcd       0xef Src/main.o
  .debug_macro   0x0000000000000cbc       0x6a Src/main.o
  .debug_macro   0x0000000000000d26      0x1df Src/main.o
- .debug_macro   0x0000000000000f05      0x20d Src/main.o
+ .debug_macro   0x0000000000000f05      0x230 Src/main.o
 
 .debug_line     0x0000000000000000      0x44f
  .debug_line    0x0000000000000000      0x3cb Src/main.o
  .debug_line    0x00000000000003cb       0x84 Startup/startup_stm32f407zgtx.o
 
-.debug_str      0x0000000000000000     0x48ce
- .debug_str     0x0000000000000000     0x489d Src/main.o
-                                       0x49f8 (size before relaxing)
- .debug_str     0x000000000000489d       0x31 Startup/startup_stm32f407zgtx.o
+.debug_str      0x0000000000000000     0x4b17
+ .debug_str     0x0000000000000000     0x4ae6 Src/main.o
+                                       0x4c41 (size before relaxing)
+ .debug_str     0x0000000000004ae6       0x31 Startup/startup_stm32f407zgtx.o
                                          0x64 (size before relaxing)
 
 .comment        0x0000000000000000       0x7b

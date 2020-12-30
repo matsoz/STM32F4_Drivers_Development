@@ -130,6 +130,17 @@
 	#define GPIOD_PCLK_DI()		pRCC->ENR[RCC_RegDef_AHB1] &= ~(1<<3)
 	#define GPIOE_PCLK_DI()		pRCC->ENR[RCC_RegDef_AHB1] &= ~(1<<4)
 
+	#define GPIOA_REG_RESET()	do{ (pRCC->RSTTR[RCC_RegDef_AHB1] |= (1<<0));	\
+										(pRCC->RSTTR[RCC_RegDef_AHB1] &= ~(1<<0));} while(0)
+	#define GPIOB_REG_RESET()	do{ (pRCC->RSTTR[RCC_RegDef_AHB1] |= (1<<1));	\
+										(pRCC->RSTTR[RCC_RegDef_AHB1] &= ~(1<<1));} while(0)
+	#define GPIOC_REG_RESET()	do{ (pRCC->RSTTR[RCC_RegDef_AHB1] |= (1<<2));	\
+										(pRCC->RSTTR[RCC_RegDef_AHB1] &= ~(1<<2));} while(0)
+	#define GPIOD_REG_RESET()	do{ (pRCC->RSTTR[RCC_RegDef_AHB1] |= (1<<3));	\
+										(pRCC->RSTTR[RCC_RegDef_AHB1] &= ~(1<<3));} while(0)
+	#define GPIOE_REG_RESET()	do{ (pRCC->RSTTR[RCC_RegDef_AHB1] |= (1<<4));	\
+										(pRCC->RSTTR[RCC_RegDef_AHB1] &= ~(1<<4));} while(0)
+
 	// I2C Clock Enabling / Disabling macros
 	#define I2C1_PCLK_EN() 	pRCC->ENR[RCC_RegDef_APB1] |= (1<<21)
 	#define I2C2_PCLK_EN() 	pRCC->ENR[RCC_RegDef_APB1] |= (1<<22)
@@ -164,10 +175,10 @@
 #ifndef	INC_STM32F407XX_H_DEF_GEN // ********** Define generic application macros for STM32F4xx peripherals
 #define INC_STM32F407XX_H_DEF_GEN
 
-#define ENABLE		1
-#define DISABLE		0
-#define SET			1
-#define RESET 		0
+	#define ENABLE		1
+	#define DISABLE		0
+	#define SET			1
+	#define RESET 		0
 
 
 #endif
