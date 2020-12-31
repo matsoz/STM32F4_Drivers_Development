@@ -22,26 +22,41 @@
 
 int main(void)
 {
-	GPIO_Handle_t *LED_0;
-
-
+	//LED GPIO Def
+	GPIO_Handle_t *GPIO_Cfg;
 	GPIO_PeriClockControl(GPIOF, ENABLE);
+	GPIO_Cfg->pGPIOBaseAddr = GPIOF;
+	GPIO_Cfg->GPIO_PinConfig.PinAltFunMode = 0;
+	GPIO_Cfg->GPIO_PinConfig.PinMode = GPIO_MODE_OUTPUT;
+	GPIO_Cfg->GPIO_PinConfig.PinNumber = GPIO_PINNUM_9;
+	GPIO_Cfg->GPIO_PinConfig.PinOPType = GPIO_OP_TYPE_OD;
+	GPIO_Cfg->GPIO_PinConfig.PinPuPdControl = GPIO_PUPD_PU;
+	GPIO_Cfg->GPIO_PinConfig.PinSpeed = GPIO_SPEED_HI;
+	GPIO_Init(GPIO_Cfg);
 
-	LED_0->pGPIOBaseAddr = GPIOF;
-	LED_0->GPIO_PinConfig.PinAltFunMode = 0;
-	LED_0->GPIO_PinConfig.PinMode = GPIO_MODE_OUTPUT;
-	LED_0->GPIO_PinConfig.PinNumber = GPIO_PINNUM_9;
-	LED_0->GPIO_PinConfig.PinOPType = GPIO_OP_TYPE_PP;
-	LED_0->GPIO_PinConfig.PinPuPdControl = GPIO_PUPD_NO_PUPD;
-	LED_0->GPIO_PinConfig.PinSpeed = GPIO_SPEED_LOW;
+	//Button GPIO Def
+	GPIO_PeriClockControl(GPIOE, ENABLE);
+	GPIO_Cfg->pGPIOBaseAddr = GPIOE;
+	GPIO_Cfg->GPIO_PinConfig.PinAltFunMode = 0;
+	GPIO_Cfg->GPIO_PinConfig.PinMode = GPIO_MODE_INPUT;
+	GPIO_Cfg->GPIO_PinConfig.PinNumber = GPIO_PINNUM_3;
+	GPIO_Cfg->GPIO_PinConfig.PinOPType = 0x0;
+	GPIO_Cfg->GPIO_PinConfig.PinPuPdControl = GPIO_PUPD_PU;
+	GPIO_Cfg->GPIO_PinConfig.PinSpeed = GPIO_SPEED_HI;
+	GPIO_Init(GPIO_Cfg);
 
-	GPIO_Init(LED_0);
+	uint8_t Btn_1_St = 0;
+
 	/* Loop forever */
-
 	while(1)
 	{
-		GPIO_ToggleOutputPin(GPIOF,GPIO_PINNUM_9);
-		for(uint32_t i=0; i<500000;i++);
+		Btn_1_St = GPIO_ReadInputPin(GPIOE, GPIO_PINNUM_3);
+
+		if(Btn_1_St == 0)
+		{
+			GPIO_ToggleOutputPin(GPIOF,GPIO_PINNUM_9);
+			for(uint32_t i=0; i<500000;i++);
+		}
 	}
 
 	return 0;
