@@ -20,14 +20,29 @@
 #include <stdint.h>
 #include "stm32f407xx.h"
 
-#if !defined(__SOFT_FP__) && defined(__ARM_FP)
-  #warning "FPU is not initialized, but the project is compiling for an FPU. Please initialize the FPU before use."
-#endif
-
 int main(void)
 {
-    /* Loop forever */
-	for(;;);
+	GPIO_Handle_t *LED_0;
+
+
+	GPIO_PeriClockControl(GPIOF, ENABLE);
+
+	LED_0->pGPIOBaseAddr = GPIOF;
+	LED_0->GPIO_PinConfig.PinAltFunMode = 0;
+	LED_0->GPIO_PinConfig.PinMode = GPIO_MODE_OUTPUT;
+	LED_0->GPIO_PinConfig.PinNumber = GPIO_PINNUM_9;
+	LED_0->GPIO_PinConfig.PinOPType = GPIO_OP_TYPE_PP;
+	LED_0->GPIO_PinConfig.PinPuPdControl = GPIO_PUPD_NO_PUPD;
+	LED_0->GPIO_PinConfig.PinSpeed = GPIO_SPEED_LOW;
+
+	GPIO_Init(LED_0);
+	/* Loop forever */
+
+	while(1)
+	{
+		GPIO_ToggleOutputPin(GPIOF,GPIO_PINNUM_9);
+		for(uint32_t i=0; i<500000;i++);
+	}
 
 	return 0;
 }

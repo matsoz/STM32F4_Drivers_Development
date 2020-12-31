@@ -8,23 +8,12 @@
 
 #include "stm32f407xx_gpio_driver.h"
 
-
-// ********** Register struct allocation for GPIO & RCC Device **********
-
-GPIO_RegDef_t *pGPIOA = GPIOA;
-GPIO_RegDef_t *pGPIOB = GPIOB;
-GPIO_RegDef_t *pGPIOC = GPIOC;
-GPIO_RegDef_t *pGPIOD = GPIOD;
-GPIO_RegDef_t *pGPIOE = GPIOE;
-
-RCC_RegDef_t *pRCC = RCC;
-
 // ********** GPIO APIs function definition **********
 
 // *** GPIO Initialization and Control ***
 void GPIO_Init(GPIO_Handle_t *pGPIOHandle) //Initialize GPIO Port and Pin
 {
-	uint8_t Temp = 0;
+	uint32_t Temp = 0;
 
 	//Configure MODE
 	if(pGPIOHandle->GPIO_PinConfig.PinMode < 3) //Non interrupt mode
@@ -73,6 +62,7 @@ void GPIO_Init(GPIO_Handle_t *pGPIOHandle) //Initialize GPIO Port and Pin
 
 void GPIO_DeInit(GPIO_RegDef_t *pGPIO) //De-Initialize GPIO Port and Pin
 {
+	pRCC_RegDef();
 	if(pGPIO == (GPIO_RegDef_t*) GPIOA_BASE_ADDRESS)	GPIOA_REG_RESET();
 	if(pGPIO == (GPIO_RegDef_t*) GPIOB_BASE_ADDRESS)	GPIOB_REG_RESET();
 	if(pGPIO == (GPIO_RegDef_t*) GPIOC_BASE_ADDRESS)	GPIOC_REG_RESET();
@@ -82,13 +72,40 @@ void GPIO_DeInit(GPIO_RegDef_t *pGPIO) //De-Initialize GPIO Port and Pin
 
 void GPIO_PeriClockControl(GPIO_RegDef_t *pGPIOx, uint8_t Enable) //Enable / Disable GPIO clock
 {
+	pRCC_RegDef();
 	if(Enable == ENABLE)
 	{
-		if(pGPIOx == (GPIO_RegDef_t*) GPIOA_BASE_ADDRESS)	GPIOA_PCLK_EN();
-		if(pGPIOx == (GPIO_RegDef_t*) GPIOB_BASE_ADDRESS)	GPIOB_PCLK_EN();
-		if(pGPIOx == (GPIO_RegDef_t*) GPIOC_BASE_ADDRESS)	GPIOC_PCLK_EN();
-		if(pGPIOx == (GPIO_RegDef_t*) GPIOD_BASE_ADDRESS)	GPIOD_PCLK_EN();
-		if(pGPIOx == (GPIO_RegDef_t*) GPIOE_BASE_ADDRESS)	GPIOE_PCLK_EN();
+
+		if(pGPIOx == (GPIO_RegDef_t*)GPIOA_BASE_ADDRESS)
+		{
+			pGPIOA_RegDef();
+			GPIOA_PCLK_EN();
+		}
+		if(pGPIOx == (GPIO_RegDef_t*)GPIOB_BASE_ADDRESS)
+		{
+			pGPIOB_RegDef();
+			GPIOB_PCLK_EN();
+		}
+		if(pGPIOx == (GPIO_RegDef_t*)GPIOC_BASE_ADDRESS)
+		{
+			pGPIOC_RegDef();
+			GPIOC_PCLK_EN();
+		}
+		if(pGPIOx == (GPIO_RegDef_t*)GPIOD_BASE_ADDRESS)
+		{
+			pGPIOD_RegDef();
+			GPIOD_PCLK_EN();
+		}
+		if(pGPIOx == (GPIO_RegDef_t*)GPIOE_BASE_ADDRESS)
+		{
+			pGPIOE_RegDef();
+			GPIOE_PCLK_EN();
+		}
+		if(pGPIOx == (GPIO_RegDef_t*)GPIOF_BASE_ADDRESS)
+		{
+			pGPIOF_RegDef();
+			GPIOF_PCLK_EN();
+		}
 	}
 	else
 	{
@@ -97,32 +114,45 @@ void GPIO_PeriClockControl(GPIO_RegDef_t *pGPIOx, uint8_t Enable) //Enable / Dis
 		if(pGPIOx == (GPIO_RegDef_t*) GPIOC_BASE_ADDRESS)	GPIOC_PCLK_DI();
 		if(pGPIOx == (GPIO_RegDef_t*) GPIOD_BASE_ADDRESS)	GPIOD_PCLK_DI();
 		if(pGPIOx == (GPIO_RegDef_t*) GPIOE_BASE_ADDRESS)	GPIOE_PCLK_DI();
+		if(pGPIOx == (GPIO_RegDef_t*) GPIOF_BASE_ADDRESS)	GPIOF_PCLK_DI();
 	}
 }
 
 uint8_t GPIO_ReadInputPin(GPIO_RegDef_t *pGPIOx, uint8_t PinNumber)
 {
-
+		uint8_t Value;
+		Value = (uint8_t) ((pGPIOx->IDR >> PinNumber) & 0x00000001);
+		return Value;
 }
 
 uint16_t GPIO_ReadInputPort(GPIO_RegDef_t *pGPIOx)
 {
-
+	uint16_t Value;
+	Value = (uint16_t) (pGPIOx->IDR);
+	return Value;
 }
 
 void GPIO_WriteOutputPin(GPIO_RegDef_t *pGPIOx, uint8_t PinNumber,uint8_t Value)
 {
+	if(Value == SET)
+	{
+		pGPIOx->ODR |= (1<<PinNumber);
+	}
+	else if(Value == RESET)
+	{
+		pGPIOx->ODR &= ~(1<<PinNumber);
+	}
 
 }
 
 void GPIO_WriteOutputPort(GPIO_RegDef_t *pGPIOx, uint16_t Value)
 {
-
+	pGPIOx->ODR = (uint16_t) Value;
 }
 
 void GPIO_ToggleOutputPin(GPIO_RegDef_t *pGPIOx, uint8_t PinNumber)
 {
-
+	pGPIOx->ODR ^= (1<<PinNumber);
 }
 
 // *** GPIO Interrupt Config and Handling ***

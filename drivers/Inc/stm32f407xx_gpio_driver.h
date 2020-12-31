@@ -5,17 +5,13 @@
  *      Author: mathe
  */
 
-#ifndef INC_STM32F407XX_GPIO_DRIVER_INC_H_
-#define INC_STM32F407XX_GPIO_DRIVER_INC_H_
+#ifndef STM32F407XX_GPIO_DRIVER_H_
+#define STM32F407XX_GPIO_DRIVER_H_
 
 	#include "stm32f407xx.h"
 
-#endif
 
-#ifndef INC_STM32F407XX_GPIO_DRIVER_STRUCT_H_
-#define INC_STM32F407XX_GPIO_DRIVER_STRUCT_H_
-
-	// *** Config. structure for the GPIO Pin
+	// *************************** Config. structure for the GPIO Pin ******************************
 	typedef struct
 	{
 		uint8_t PinNumber;
@@ -26,19 +22,15 @@
 		uint8_t PinAltFunMode;
 	}GPIO_PinConfig_t;
 
-	// *** Handle structure for the GPIO Pin
+	// ******************************** Handle structure for the GPIO Pin ******************************
 	typedef struct
 	{
 		GPIO_RegDef_t *pGPIOBaseAddr; //Holds the base address of the GPIO port which the pin belongs
 		GPIO_PinConfig_t GPIO_PinConfig;
 	}GPIO_Handle_t;
 
-#endif
 
-#ifndef INC_STM32F407XX_GPIO_DRIVER_PROTO_H_
-#define INC_STM32F407XX_GPIO_DRIVER_PROTO_H_
-
-	// GPIO Initialization and Control
+	// ****************************** GPIO Initialization and Control prototypes ******************************
 	void GPIO_Init(GPIO_Handle_t *pGPIOHandle); //Initialize GPIO Port and Pin
 	void GPIO_DeInit(GPIO_RegDef_t *pGPIO); //De-Initialize GPIO Port and Pin
 	void GPIO_PeriClockControl(GPIO_RegDef_t *pGPIOx, uint8_t Enable); //Enable / Disable GPIO clock
@@ -53,12 +45,9 @@
 	void GPIO_IRQConfig(uint8_t IRQNumber, uint8_t IRQPriority, uint8_t Enable);
 	void GPIO_IRQHandling(uint8_t PinNumber);
 
-#endif
 
-#ifndef INC_STM32F407XX_GPIO_DRIVER_GEN_H_
-#define INC_STM32F407XX_GPIO_DRIVER_GEN_H_
 
-	// *** Specific definitions for GPIO Handle function
+	// ******************************** Specific definitions for GPIO Handle function ******************************
 
 	//GPIO Pin Number
 	#define GPIO_PINNUM_0				0
@@ -98,8 +87,8 @@
 	#define GPIO_SPEED_HI				3
 
 	//GPIO Pin Pull Up / Down config
-	#define GPIO_PUPD_NO_PUPD					0
-	#define GPIO_PUPD_PU						1
-	#define GPIO_PUPD_PD						2
+	#define GPIO_PUPD_NO_PUPD			0
+	#define GPIO_PUPD_PU				1
+	#define GPIO_PUPD_PD				2
 
 #endif

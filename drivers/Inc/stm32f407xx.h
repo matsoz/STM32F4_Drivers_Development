@@ -9,12 +9,15 @@
  *      Author: Matheus Sozza
  */
 
-#include <stdint.h>
-#define __vo volatile
+#ifndef STM32F407XX_H_
+#define	STM32F407XX_H_
 
-#ifndef INC_STM32F407XX_H_DEF_BASEADDR  // ********** Define base address macros for STM32F4xx peripherals
-	#define INC_STM32F407XX_H_DEF_BASEADDR
+	#include <stddef.h>
+	#include <stdint.h>
+	#define __vo volatile
 
+
+ // **************************************** Define base address macros for STM32F4xx peripherals
 	/* RCC Clock Base Address */
 	#define RCC_BASE_ADDRESS					0x40023800U
 
@@ -26,18 +29,19 @@
 	#define SRAM 								SRAM_BASE_ADDRESS
 
 	/*  Main Buses address */
-	#define PERIPH_BASE 						0x400000000U
+	#define PERIPH_BASE 						0x40000000U
 	#define APB1_PERIPH_BASE_ADDRESS 			PERIPH_BASE
 	#define APB2_PERIPH_BASE_ADDRESS 			0x40010000U
 	#define AHB1_PERIPH_BASE_ADDRESS 			0x40020000U
 	#define AHB2_PERIPH_BASE_ADDRESS 			0x50000000U
 
 	/* AHB1 Peripherals */
-	#define GPIOA_BASE_ADDRESS 					APB1_PERIPH_BASE_ADDRESS + 0X0400U
-	#define GPIOB_BASE_ADDRESS 					APB1_PERIPH_BASE_ADDRESS + 0X0400U
-	#define GPIOC_BASE_ADDRESS 					APB1_PERIPH_BASE_ADDRESS + 0X0800U
-	#define GPIOD_BASE_ADDRESS 					APB1_PERIPH_BASE_ADDRESS + 0X0C00U
-	#define GPIOE_BASE_ADDRESS 					APB1_PERIPH_BASE_ADDRESS + 0X1000U
+	#define GPIOA_BASE_ADDRESS 					(AHB1_PERIPH_BASE_ADDRESS + 0X0400U)
+	#define GPIOB_BASE_ADDRESS 					(AHB1_PERIPH_BASE_ADDRESS + 0X0400U)
+	#define GPIOC_BASE_ADDRESS 					(AHB1_PERIPH_BASE_ADDRESS + 0X0800U)
+	#define GPIOD_BASE_ADDRESS 					(AHB1_PERIPH_BASE_ADDRESS + 0X0C00U)
+	#define GPIOE_BASE_ADDRESS 					(AHB1_PERIPH_BASE_ADDRESS + 0X1000U)
+	#define GPIOF_BASE_ADDRESS 					(AHB1_PERIPH_BASE_ADDRESS + 0X1400U)
 
 	/* APB1 Peripherals */
 	#define I2C1_BASE_ADDRESS 					APB1_PERIPH_BASE_ADDRESS + 0X5400U
@@ -59,10 +63,7 @@
 	#define USART1_BASE_ADDRESS 				APB2_PERIPH_BASE_ADDRESS + 0X1000U
 	#define USART6_BASE_ADDRESS 				APB2_PERIPH_BASE_ADDRESS + 0X1400U
 
-#endif
-
-#ifndef INC_STM32F407XX_H_DEF_STRUCT // ********** Define register mapping structures for STM32F4xx peripherals
-	#define INC_STM32F407XX_H_DEF_STRUCT
+// **************************************** Define register mapping structures for STM32F4xx peripherals
 
 	/*** GPIO Base Register Structure ***/
 	typedef struct //GPIO_RegDef_t register mapping definition
@@ -77,22 +78,16 @@
 		__vo uint32_t BSRRH;
 		__vo uint32_t LCKR;
 		__vo uint32_t AFR[2]; //AFR[0] is the low register; AFR[1] is the high register
-	} GPIO_RegDef_t;
-
-	#define GPIOA (GPIO_RegDef_t*)GPIOA_BASE_ADDRESS
-	#define GPIOB (GPIO_RegDef_t*)GPIOB_BASE_ADDRESS
-	#define GPIOC (GPIO_RegDef_t*)GPIOC_BASE_ADDRESS
-	#define GPIOD (GPIO_RegDef_t*)GPIOD_BASE_ADDRESS
-	#define GPIOE (GPIO_RegDef_t*)GPIOE_BASE_ADDRESS
+	}GPIO_RegDef_t;
 
 	/*** RCC Base Register Structure ***/
 	typedef struct //RCC_RegDef_t register mapping definition
 	{
-		#define RCC_RegDef_APB1 0
-		#define RCC_RegDef_APB2 1
-		#define RCC_RegDef_APB3 2
-		#define RCC_RegDef_AHB1 4
-		#define RCC_RegDef_AHB2 5
+		#define RCC_RegDef_AHB1 0
+		#define RCC_RegDef_AHB2 1
+		#define RCC_RegDef_AHB3 2
+		#define RCC_RegDef_APB1 4
+		#define RCC_RegDef_APB2 5
 
 		__vo uint32_t CR;
 		__vo uint32_t PLLCFG;
@@ -108,27 +103,43 @@
 		__vo uint32_t PLLSAICFGR;
 		__vo uint32_t DCKCFGR;
 
-	} RCC_RegDef_t;
+	}RCC_RegDef_t;
 
-	#define RCC (RCC_RegDef_t*)RCC_BASE_ADDRESS
+	#define GPIOA	(GPIO_RegDef_t*)GPIOA_BASE_ADDRESS
+	#define GPIOB	(GPIO_RegDef_t*)GPIOB_BASE_ADDRESS
+	#define GPIOC	(GPIO_RegDef_t*)GPIOC_BASE_ADDRESS
+	#define GPIOD	(GPIO_RegDef_t*)GPIOD_BASE_ADDRESS
+	#define GPIOE	(GPIO_RegDef_t*)GPIOE_BASE_ADDRESS
+	#define GPIOF	(GPIO_RegDef_t*)GPIOF_BASE_ADDRESS
 
-#endif
+	#define RCC		(RCC_RegDef_t*)RCC_BASE_ADDRESS
 
-#ifndef INC_STM32F407XX_H_DEF_CLKEN // ********** Define RCC clock enabling macros for STM32F4xx peripheral
-	#define INC_STM32F407XX_H_DEF_CLKEN
+// **************************************** Register struct allocation for GPIO & RCC Device ****************************************
 
+	#define pGPIOA_RegDef()			GPIO_RegDef_t *pGPIOA = GPIOA
+	#define pGPIOB_RegDef()			GPIO_RegDef_t *pGPIOB = GPIOB
+	#define pGPIOC_RegDef()			GPIO_RegDef_t *pGPIOC = GPIOC
+	#define pGPIOD_RegDef()			GPIO_RegDef_t *pGPIOD = GPIOD
+	#define pGPIOE_RegDef()			GPIO_RegDef_t *pGPIOE = GPIOE
+	#define pGPIOF_RegDef()			GPIO_RegDef_t *pGPIOF = GPIOF
+
+	#define pRCC_RegDef()			RCC_RegDef_t *pRCC = RCC
+
+// **************************************** Define RCC clock enabling macros for STM32F4xx peripheral
 	// GPIO Clock Enabling / Disabling macros
 	#define GPIOA_PCLK_EN()		pRCC->ENR[RCC_RegDef_AHB1] |= (1<<0)
 	#define GPIOB_PCLK_EN()		pRCC->ENR[RCC_RegDef_AHB1] |= (1<<1)
 	#define GPIOC_PCLK_EN()		pRCC->ENR[RCC_RegDef_AHB1] |= (1<<2)
 	#define GPIOD_PCLK_EN()		pRCC->ENR[RCC_RegDef_AHB1] |= (1<<3)
 	#define GPIOE_PCLK_EN()		pRCC->ENR[RCC_RegDef_AHB1] |= (1<<4)
+	#define GPIOF_PCLK_EN()		pRCC->ENR[RCC_RegDef_AHB1] |= (1<<5)
 
 	#define GPIOA_PCLK_DI()		pRCC->ENR[RCC_RegDef_AHB1] &= ~(1<<0)
 	#define GPIOB_PCLK_DI()		pRCC->ENR[RCC_RegDef_AHB1] &= ~(1<<1)
 	#define GPIOC_PCLK_DI()		pRCC->ENR[RCC_RegDef_AHB1] &= ~(1<<2)
 	#define GPIOD_PCLK_DI()		pRCC->ENR[RCC_RegDef_AHB1] &= ~(1<<3)
 	#define GPIOE_PCLK_DI()		pRCC->ENR[RCC_RegDef_AHB1] &= ~(1<<4)
+	#define GPIOF_PCLK_DI()		pRCC->ENR[RCC_RegDef_AHB1] &= ~(1<<5)
 
 	#define GPIOA_REG_RESET()	do{ (pRCC->RSTTR[RCC_RegDef_AHB1] |= (1<<0));	\
 										(pRCC->RSTTR[RCC_RegDef_AHB1] &= ~(1<<0));} while(0)
@@ -139,7 +150,9 @@
 	#define GPIOD_REG_RESET()	do{ (pRCC->RSTTR[RCC_RegDef_AHB1] |= (1<<3));	\
 										(pRCC->RSTTR[RCC_RegDef_AHB1] &= ~(1<<3));} while(0)
 	#define GPIOE_REG_RESET()	do{ (pRCC->RSTTR[RCC_RegDef_AHB1] |= (1<<4));	\
-										(pRCC->RSTTR[RCC_RegDef_AHB1] &= ~(1<<4));} while(0)
+										(pRCC->RSTTR[RCC_RegDef_AHB1] &= ~(1<<5));} while(0)
+	#define GPIOF_REG_RESET()	do{ (pRCC->RSTTR[RCC_RegDef_AHB1] |= (1<<4));	\
+										(pRCC->RSTTR[RCC_RegDef_AHB1] &= ~(1<<5));} while(0)
 
 	// I2C Clock Enabling / Disabling macros
 	#define I2C1_PCLK_EN() 	pRCC->ENR[RCC_RegDef_APB1] |= (1<<21)
@@ -170,15 +183,13 @@
 	#define UART4_PCLK_DI() 	pRCC->ENR[RCC_RegDef_APB1] &= ~(1<<19)
 	#define UART5_PCLK_DI() 	pRCC->ENR[RCC_RegDef_APB1] &= ~(1<<20)
 
-#endif
 
-#ifndef	INC_STM32F407XX_H_DEF_GEN // ********** Define generic application macros for STM32F4xx peripherals
-#define INC_STM32F407XX_H_DEF_GEN
-
+// **************************************** Define generic application macros for STM32F4xx peripherals
 	#define ENABLE		1
 	#define DISABLE		0
 	#define SET			1
 	#define RESET 		0
 
+	#include "stm32f407xx_gpio_driver.h"
 
 #endif
