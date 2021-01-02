@@ -17,7 +17,25 @@
 	#define __vo volatile
 
 
- // **************************************** Define base address macros for STM32F4xx peripherals
+ // **************************************** Processor specific details for STM32F4xx based MCU ***************************************
+
+	// *** NVIC Registers
+	#define NVIC_ISER0 								((__vo uint32_t*) 0xE000E100)
+	#define NVIC_ISER1							 	((__vo uint32_t*) 0xE000E104)
+	#define NVIC_ISER2							 	((__vo uint32_t*) 0xE000E108)
+	#define NVIC_ISER3 								((__vo uint32_t*) 0xE000E10C)
+
+	#define NVIC_ICER0 								((__vo uint32_t*) 0xE000E180)
+	#define NVIC_ICER1 								((__vo uint32_t*) 0xE000E184)
+	#define NVIC_ICER2							 	((__vo uint32_t*) 0xE000E188)
+	#define NVIC_ICER3 								((__vo uint32_t*) 0xE000E18C)
+
+	#define NVIC_PR_BASE_ADDRESS 					((__vo uint32_t*)0xE000E4000)
+
+	#define	NVIC_NO_PR_BITS_IMPLEMENTED				4
+
+
+ // **************************************** Define base address macros for STM32F4xx peripherals ***************************************
 	/* RCC Clock Base Address */
 	#define RCC_BASE_ADDRESS					0x40023800U
 
@@ -105,6 +123,29 @@
 
 	}RCC_RegDef_t;
 
+	/*** EXTI Base Register Structure ***/
+		typedef struct //EXTI_RegDef_t register mapping definition
+		{
+			__vo uint32_t IMR;
+			__vo uint32_t EMR;
+			__vo uint32_t RTSR;
+			__vo uint32_t FTSR;
+			__vo uint32_t SWIER;
+			__vo uint32_t PR;
+		}EXTI_RegDef_t;
+
+	/*** SYSCFG Base Register Structure ***/
+		typedef struct //SYSCFG_RegDef_t register mapping definition
+		{
+			__vo uint32_t MEMRMP;
+			__vo uint32_t PMC;
+			__vo uint32_t EXTICR[4];
+			__vo uint32_t RESERVED1[2];
+			__vo uint32_t CMPCR;
+			__vo uint32_t RESERVED2[2];
+			__vo uint32_t CFGR;
+		}SYSCFG_RegDef_t;
+
 	#define GPIOA	(GPIO_RegDef_t*)GPIOA_BASE_ADDRESS
 	#define GPIOB	(GPIO_RegDef_t*)GPIOB_BASE_ADDRESS
 	#define GPIOC	(GPIO_RegDef_t*)GPIOC_BASE_ADDRESS
@@ -113,6 +154,10 @@
 	#define GPIOF	(GPIO_RegDef_t*)GPIOF_BASE_ADDRESS
 
 	#define RCC		(RCC_RegDef_t*)RCC_BASE_ADDRESS
+
+	#define EXTI	((EXTI_RegDef_t*)EXTI_BASE_ADDRESS)
+
+	#define SYSCFG	((SYSCFG_RegDef_t*)SYSCFG_BASE_ADDRESS)
 
 // **************************************** Register struct allocation for GPIO & RCC Device ****************************************
 
@@ -154,6 +199,11 @@
 	#define GPIOF_REG_RESET()	do{ (pRCC->RSTTR[RCC_RegDef_AHB1] |= (1<<4));	\
 										(pRCC->RSTTR[RCC_RegDef_AHB1] &= ~(1<<5));} while(0)
 
+	//SYSCFG Clock enabling / disabling macros
+
+	#define SYSCFG_CLK_EN() 	pRCC->ENR[RCC_RegDef_APB2] |= (1<<14);
+	#define SYSCFG_CLK_DI() 	pRCC->ENR[RCC_RegDef_APB2] &= ~(1<<14);
+
 	// I2C Clock Enabling / Disabling macros
 	#define I2C1_PCLK_EN() 	pRCC->ENR[RCC_RegDef_APB1] |= (1<<21)
 	#define I2C2_PCLK_EN() 	pRCC->ENR[RCC_RegDef_APB1] |= (1<<22)
@@ -183,12 +233,32 @@
 	#define UART4_PCLK_DI() 	pRCC->ENR[RCC_RegDef_APB1] &= ~(1<<19)
 	#define UART5_PCLK_DI() 	pRCC->ENR[RCC_RegDef_APB1] &= ~(1<<20)
 
-
 // **************************************** Define generic application macros for STM32F4xx peripherals
+
+	// IRQ Number macros
+	#define IRQ_NO_EXTI0		6
+	#define IRQ_NO_EXTI1		7
+	#define IRQ_NO_EXTI2		8
+	#define IRQ_NO_EXTI3		9
+	#define IRQ_NO_EXTI4		10
+	#define IRQ_NO_EXTI9_5		23
+	#define IRQ_NO_EXTI15_10	40
+
+	// Generic definitions
 	#define ENABLE		1
 	#define DISABLE		0
 	#define SET			1
 	#define RESET 		0
+
+	// Generic Macros
+	#define GPIO_BASE_ADDRESS_TO_CODE(x)	((x== GPIOA) ? 0 : \
+											(x==GPIOB) ?  1 : \
+											(x==GPIOC) ?  2 : \
+											(x==GPIOD) ?  3 : \
+											(x==GPIOE) ?  4 : \
+											(x==GPIOF) ? 5 : 0)
+
+// **************************************** Sub-libraries inclusion for STM32F4xx peripherals
 
 	#include "stm32f407xx_gpio_driver.h"
 

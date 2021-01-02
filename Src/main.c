@@ -20,6 +20,8 @@
 #include <stdint.h>
 #include "stm32f407xx.h"
 
+uint8_t Btn_1_St = 0;
+
 int main(void)
 {
 	//LED GPIO Def
@@ -38,19 +40,19 @@ int main(void)
 	GPIO_PeriClockControl(GPIOE, ENABLE);
 	GPIO_Cfg->pGPIOBaseAddr = GPIOE;
 	GPIO_Cfg->GPIO_PinConfig.PinAltFunMode = 0;
-	GPIO_Cfg->GPIO_PinConfig.PinMode = GPIO_MODE_INPUT;
+	GPIO_Cfg->GPIO_PinConfig.PinMode = GPIO_MODE_IT_RT;
 	GPIO_Cfg->GPIO_PinConfig.PinNumber = GPIO_PINNUM_3;
 	GPIO_Cfg->GPIO_PinConfig.PinOPType = 0x0;
 	GPIO_Cfg->GPIO_PinConfig.PinPuPdControl = GPIO_PUPD_PU;
 	GPIO_Cfg->GPIO_PinConfig.PinSpeed = GPIO_SPEED_HI;
 	GPIO_Init(GPIO_Cfg);
 
-	uint8_t Btn_1_St = 0;
+	GPIO_IRQConfig(IRQ_NO_EXTI3, 0x01, ENABLE); //Enable IRQ
 
 	/* Loop forever */
 	while(1)
 	{
-		Btn_1_St = GPIO_ReadInputPin(GPIOE, GPIO_PINNUM_3);
+		//Btn_1_St = GPIO_ReadInputPin(GPIOE, GPIO_PINNUM_3);
 
 		if(Btn_1_St == 0)
 		{
@@ -60,4 +62,10 @@ int main(void)
 	}
 
 	return 0;
+}
+
+void EXTI3_IRQHandler(void)
+{
+	GPIO_IRQHandling(3);
+	Btn_1_St = Btn_1_St ^ 1;
 }
