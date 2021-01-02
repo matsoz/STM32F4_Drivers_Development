@@ -26,8 +26,8 @@ uint8_t Btn_1_St = 0;
 int main(void)
 {
 
+	// *** Hardware peripheral initialization using Heap memory ***
 	GPIO_Handle_t *GPIO_Cfg;
-
 	GPIO_Cfg = malloc(sizeof(GPIO_Handle_t));
 
 	//LED GPIO Def
@@ -54,7 +54,13 @@ int main(void)
 
 	GPIO_IRQConfig(IRQ_NO_EXTI3, 0x01, ENABLE); //Enable IRQ
 
-	/* Loop forever */
+	free(GPIO_Cfg);
+
+	// *** End of  Hardware peripheral initialization using Heap memory ***
+
+
+	// *** Main Application ***
+
 	while(1)
 	{
 		//Btn_1_St = GPIO_ReadInputPin(GPIOE, GPIO_PINNUM_3);
