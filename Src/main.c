@@ -18,14 +18,19 @@
  */
 
 #include <stdint.h>
+#include <stdlib.h>
 #include "stm32f407xx.h"
 
 uint8_t Btn_1_St = 0;
 
 int main(void)
 {
-	//LED GPIO Def
+
 	GPIO_Handle_t *GPIO_Cfg;
+
+	GPIO_Cfg = malloc(sizeof(GPIO_Handle_t));
+
+	//LED GPIO Def
 	GPIO_PeriClockControl(GPIOF, ENABLE);
 	GPIO_Cfg->pGPIOBaseAddr = GPIOF;
 	GPIO_Cfg->GPIO_PinConfig.PinAltFunMode = 0;
@@ -53,20 +58,17 @@ int main(void)
 	while(1)
 	{
 		//Btn_1_St = GPIO_ReadInputPin(GPIOE, GPIO_PINNUM_3);
-
 		if(Btn_1_St == 0)
 		{
 			GPIO_ToggleOutputPin(GPIOF,GPIO_PINNUM_9);
 			for(uint32_t i=0; i<500000;i++);
 		}
 	}
-
 	return 0;
 }
 
 void EXTI3_IRQHandler(void)
 {
-	GPIO_IRQHandling(3);
-	//Btn_1_St = Btn_1_St == 1 ? 1:0;
-	Btn_1_St ^= 1;
+	GPIO_IRQHandling(3); //Pend the interrupt
+	Btn_1_St ^= 0x01; // Toggle the LED command bit
 }
