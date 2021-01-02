@@ -67,5 +67,6 @@ int main(void)
 void EXTI3_IRQHandler(void)
 {
 	GPIO_IRQHandling(3);
-	Btn_1_St = Btn_1_St ^ 1;
+	//Btn_1_St = Btn_1_St == 1 ? 1:0;
+	Btn_1_St ^= 1;
 }
